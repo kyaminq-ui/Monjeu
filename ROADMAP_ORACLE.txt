@@ -1,0 +1,332 @@
+==========================================================
+                    ORACLE — ROADMAP FUSIONNÉE v2.0
+           Tactical PvP · 2.5D Isométrique · Dark Fantasy
+==========================================================
+Éléments issus de la roadmap Lorenzo marqués [LORENZO]
+Cases : [x] = validé / [ ] = à faire
+==========================================================
+
+
+###############################
+PHASE 0 — PRÉ-PRODUCTION & PROTOTYPE TECHNIQUE
+Objectif : Valider la boucle de gameplay
+Durée estimée : 2–5 semaines
+###############################
+
+[ Design Document (GDD) ]
+--------------------------------
+[x] Vision du jeu définie — PvP compétitif, no classes fixes, deck de sorts, DA Pixel Art Dark Fantasy
+[x] Core Loop défini : Lobby → Draft sorts/passifs → Placement → Combat tour par tour → Résultats
+[x] Paramètres combat définis — 15s/tour, 8 PA, 3 PM, map 10x10 cercle, 4 obstacles fixes + 6 breakables aléatoires [LORENZO]
+[x] 30 sorts créés et documentés (10 Attaque, 10 Gestion, 10 Survie) + 10 Passifs équilibrés [LORENZO]
+[ ] Moodboard DA validé (Darkest Dungeon, Dead Cells, Dofus/Wakfu, Tactics Ogre)
+[ ] Palette dark fantasy finalisée et sauvegardée dans Aseprite
+
+[ Setup Projet Unity ]
+--------------------------------
+[ ] Projet Unity 2022 LTS créé (URP — Universal Render Pipeline)
+[ ] Configuration pixel art : Filter Mode Point, PPU = 32, Camera Orthographic, AA désactivé
+[ ] Packages installés : 2D Tilemap, TextMeshPro, DOTween
+[ ] Git + GitHub configuré avec .gitignore Unity
+[ ] Arborescence dossiers créée (/Scripts/Core, Combat, Network, UI, Utils / Sprites / Prefabs / ScriptableObjects)
+
+[ Grille Isométrique & Navigation ]
+--------------------------------
+NOTE : Conversion grille<->monde ISO : worldX = (gx - gy) * (tW/2), worldY = (gx + gy) * (tH/4)
+
+[x] GridManager — Singleton, grille 15x15 circulaire, TileNode avec données A* [LORENZO]
+[x] Pathfinding A* fonctionnel sur grille, GetReachableCells(start, maxDist) implémenté [LORENZO]
+[x] Point & Click — PlayerController.cs avec déplacement sur chemin animé case par case [LORENZO]
+[ ] Highlight de cellules : bleu (déplacement), rouge (attaque), orange (AoE)
+[ ] Tiles pixel art isométriques créées (sol de donjon, overlay transparent, obstacles)
+[ ] Caméra isométrique 2.5D — 30°, zoom molette, déplacement ZQSD + clic milieu, limites inspector
+
+[ Architecture Réseau — Phase 0 ]
+--------------------------------
+NOTE : Décision critique — Mirror (KCP) déjà fonctionnel dans le projet Lorenzo vs Photon PUN 2
+       (roadmap pote). Recommandation : garder Mirror, synchronisation déjà validée en local.
+
+[x] Serveur Mirror KCP — GameNetworkManager.cs (subclasse NetworkManager), Host/Client [LORENZO]
+[x] Synchronisation déplacements réseau — CmdMoveToTile() -> RpcOnPlayerMoved() [LORENZO]
+[x] Connexion locale testée et validée — 2 instances se voient et se déplacent [LORENZO]
+[x] NetworkPlayer — SyncVars, Commands, ClientRPCs, PlayerNameLabel, CameraFollow [LORENZO]
+[ ] Décision finalisée sur stack réseau : Mirror KCP (existant) ou migration vers Photon PUN 2
+[ ] Système de rooms/lobbies avec mode de jeu (1v1, 2v2, 3v3)
+[ ] Gestion déconnexion — joueur quitte = défaite, reconnect mid-game
+
+[ Hub Social ]
+--------------------------------
+[x] Chat temps réel — envoi + réception multijoueur via Mirror RPC [LORENZO]
+[x] Affichage joueurs en ligne — OnlinePlayersManager.cs + PlayerListEntry créés [LORENZO]
+[ ] Brancher OnlinePlayersManager — liste joueurs connectés affichée en UI [LORENZO]
+[ ] Menus hub — Paramètres, Deck de sorts, Ladder, Chat, Inventaire (cosmétiques), Ranked, Amis
+
+[ Deck Builder & Système de Sorts ]
+--------------------------------
+[x] 40 SpellData créés en ScriptableObjects (10 Attaque, 10 Gestion, 10 Survie, 10 Passifs) [LORENZO]
+[x] DeckManager — interface auto-générée, sélection 1 passif/10 + 5 sorts/30, tri par catégorie [LORENZO]
+[x] Sauvegarde deck en PlayerPrefs — persist entre sessions [LORENZO]
+[ ] ScriptableObjects complets — CharacterStats, SpellData (portée, zone, cooldown, icône), PassiveData
+
+[ Système de Défi & Transition Combat ]
+--------------------------------
+[x] DuelRequest.cs — demande/accepter/refuser duel, CombatTransition.cs Hub->Combat->Hub [LORENZO]
+[ ] Interaction clic sur joueur -> proposition duel casual dans le hub [LORENZO]
+[ ] Flow complet validé : Hub -> Défi -> Chargement Combat -> Retour Hub [LORENZO]
+
+
+==========================================================
+PHASE 1 — CORE COMBAT ENGINE — Tour par Tour & Sorts
+Durée estimée : 5–7 semaines
+==========================================================
+
+[ 1A — Turn Manager & Mécanique de Tour ]
+--------------------------------
+[ ] Timer de tour — 15 secondes (paramètre Lorenzo), timer visible avec pression constante [LORENZO]
+[ ] Gestion PA/PM — 8 PA + 3 PM par tour (valeurs Lorenzo) [LORENZO]
+[ ] TurnManager — liste combattants triée par initiative, events OnTurnStart/End, OnCombatEnd
+[ ] Reset PA/PM à chaque début de tour + gestion effets de durée (DoT, boucliers)
+[ ] TimerUI — barre circulaire, vert->orange->rouge, pulsation urgence, tick sonore <5s
+[ ] Phase de placement — zones par équipe, timer 60s, validation quand tous placés
+
+[ 1A — Map de Combat ]
+--------------------------------
+[ ] Map combat 10x10 cercle — 4 obstacles fixes indestructibles + 6 obstacles breakables aléatoires [LORENZO]
+[ ] Pathfinding adapté au combat — réutilisation Pathfinding.cs Lorenzo, zones de déplacement [LORENZO]
+[ ] Ligne de vue — calcul LOS sur la grille, bloque certains sorts et zones
+[ ] Obstacles destructibles — HP propres, destruction visuelle, disparaissent de la grille
+[ ] IsometricSortingManager — tri Z-order automatique, ne recalcule que si mouvement détecté
+
+[ 1B — Système de Sorts & Architecture ]
+--------------------------------
+[ ] SpellCaster — vérifie PA suffisants, portée valide, cooldown, affiche zone AoE au survol [LORENZO]
+[ ] SpellResolver — applique tous les effets des 30 sorts de Lorenzo (dégâts, Push/Pull, DoT, buffs) [LORENZO]
+[ ] SpellAnimator — VFX de sort, animation <0.4s max (contrainte Lorenzo), résolution après anim [LORENZO]
+[ ] AoECalculator — Single, Croix, Ligne, Cercle, Cône, Boost, avec blocage par obstacles
+[ ] Système de tags extensibles — Push, Poison, Shield, Debuffs, Buffs (définis par Lorenzo) [LORENZO]
+[ ] Gestion cooldowns par sort — overlay grisé UI + chiffre
+[ ] VFXManager — object pooling, sorting order iso, auto-destroy fin animation
+[ ] Floating text — dégâts, soins, miss affichés en pixel art
+
+[ 1B — Système de Passifs ]
+--------------------------------
+[ ] PassiveManager — IPassive + TriggerContext (source, cible, valeur), events combat abonnés [LORENZO]
+[ ] Implémentation des 10 passifs Lorenzo — Berserker, Évasif, Dernier Rempart, Vigilance... [LORENZO]
+[ ] Écran de sélection passifs — grille 9-10 cartes, highlight sélection, timer 30-45s, auto-select
+[ ] CharacterController — facing direction, états Idle/Moving/Casting/Dead, animations
+
+[ 1C — HUD Combat ]
+--------------------------------
+NOTE : Layout UI combat : HP bars (haut) | Grille ISO (70%) | Passifs + PA/PM + Hotbar sorts (bas)
+
+[ ] Hotbar sorts — 8 slots, raccourcis Q W E R A S D F, tooltip au survol
+[ ] Affichage PA/PM — indicateurs visuels en temps réel, grisé si insuffisant
+[ ] Statistiques post-combat — dégâts infligés, cellules parcourues, précision positionnement [LORENZO]
+[ ] Réactions sprite — flash + recul 1 pixel sur coup reçu [LORENZO]
+
+
+==========================================================
+PHASE 2 — NETWORKING COMPLET
+Durée estimée : 4–6 semaines
+==========================================================
+
+NOTE ARCHITECTURE : Turn-based networking — le serveur (MasterClient) valide chaque action avant
+exécution. Chaque action = RPC broadcasté. Pas de simulation côté client pour éviter désync.
+Flux Lorenzo existant : Cmd -> Server valide -> Rpc -> Tous clients
+
+[ Actions à Synchroniser via RPC ]
+--------------------------------
+[x] CmdMoveToTile() -> RpcOnPlayerMoved() — déplacement déjà synchronisé [LORENZO]
+[x] CmdSendChatMessage() -> RpcReceiveChatMessage() — chat synchronisé [LORENZO]
+[x] CmdSendDuelRequest() -> TargetReceiveDuelRequest() -> CombatTransition [LORENZO]
+[ ] CastSpell(charId, spellId, targetX, targetY) — validation server + résolution
+[ ] EndTurn(charId) — changement de tour synchronisé
+[ ] SelectPassive(playerId, passiveId) — sélection pre-combat
+[ ] TimerExpired(charId) — fin de timer forcée serveur
+[ ] File d'attente d'actions — évite conflits, resync si reconnect mid-game
+
+[ Modes de Jeu Réseau ]
+--------------------------------
+[ ] 1v1 en réseau — matchmaking simple, rejoindre room aléatoire [MVP]
+[ ] 2v2 — initiative globale mélangée, chat d'équipe, gestion si coéquipier déco [POST-MVP]
+[ ] 3v3 — idem 2v2, friendly fire selon sorts [POST-MVP]
+
+[ Serveur Web (Architecture Lorenzo) ]
+--------------------------------
+NOTE : Le dossier Oracle/game/ contient un serveur WebSocket Node.js (server.js) avec logique de
+       jeu complète (classes, map, tour, combat). Architecture parallèle à Unity/Mirror.
+       A DÉCIDER : garder Node.js authoritative + Unity client, ou tout en Mirror ?
+
+[x] Serveur WebSocket Node.js — gestion rooms, état de jeu, phases LOBBY/PLACEMENT/COMBAT [LORENZO]
+[x] Classes serveur (Assassin, Guerrier, Mage) avec sorts et stats — base à intégrer dans SpellData [LORENZO]
+[ ] Décision d'architecture : serveur Node.js (authoritative) + Unity client, ou tout en Mirror ? [LORENZO]
+[ ] Intégration logique serveur Node.js dans Unity si migration [LORENZO]
+
+
+==========================================================
+PHASE 3 — DIRECTION ARTISTIQUE
+En parallèle — Maxon
+==========================================================
+
+[ Assets Prioritaires — Tiles ]
+--------------------------------
+[ ] Tile sol principal 64x32 (base + 2 variantes dark fantasy)
+[ ] Tile sol avec décoration (taches de sang, runes)
+[ ] Obstacles bas (rocher, débris) 64x64
+[ ] Bords de map / vide
+[ ] Overlays surbrillance transparents (bleu, rouge, orange)
+
+[ Personnage MVP ]
+--------------------------------
+[ ] Silhouette base 32x48 — guerrier sombre générique
+[ ] Idle Sud — 4 frames, 4 directions
+[ ] Walk Sud — 6 frames, dupliquer H pour E/O
+[ ] Hit — 3 frames (flash + recul pixel)
+[ ] Death — 6 frames
+
+[ UI & Icônes ]
+--------------------------------
+[ ] Frame barre de vie — style pierre gravée
+[ ] Frame icône sort 48x48 — bord ornemental
+[ ] 8+ icônes sorts MVP en pixel art
+[ ] 10 icônes passifs minimum
+[ ] Fond panneaux UI — texture parchemin sombre
+[ ] Boutons états : normal, hover, pressed
+
+[ VFX Sorts ]
+--------------------------------
+[ ] Animations sorts <0.4s max — contrainte fluidité Lorenzo [LORENZO]
+[ ] Impact physique / sang — 32x32px, 5-8 frames
+[ ] Magie sombre / éclair — traîne lumineuse
+[ ] Soin — particules montantes cristallines
+[ ] Bouclier — aura autour du personnage
+[ ] Contrôle — chaînes, gel, immobilisation
+
+[ Audio — Suno AI + Sound Design ]
+--------------------------------
+[ ] Thème principal / Menu — dark fantasy medieval orchestral, 120 BPM
+[ ] Musique combat intense — fast drums, loop-friendly, tense
+[ ] Victoire (10-15s) + Défaite (8-10s) jingles
+[ ] Sélection passifs — dark ambient mystérieux, loop
+[ ] Sons gameplay — impact épée/magie, mort, soin, contrôle
+[ ] Sons UI — survol case, sélection sort, fin tour, timer urgence
+
+
+==========================================================
+PHASE 4 — COUCHE COMPÉTITIVE — MMR, Ranked, Spectator
+Post-MVP
+==========================================================
+
+[ Progression Compétitive ]
+--------------------------------
+[ ] Système MMR / Elo — calcul, affichage, historique [LORENZO]
+[ ] Ranked Seasons courtes — 2 mois, récompenses, reset partiel du ranking [LORENZO]
+[ ] Ladder public temps réel — top 100 visible de tous [LORENZO]
+[ ] Matchmaking MMR — appairage par niveau de skill
+[ ] Draft pré-match — sélection sorts/passifs en timer, ban phase optionnelle [LORENZO]
+
+[ Fonctionnalités PvP Avancées ]
+--------------------------------
+[ ] Mode Spectator — fondamental pour communauté et scène esport [LORENZO]
+[ ] Replays — rejouer les parties après coup [LORENZO]
+[ ] Historique des matchs — stats détaillées par partie [LORENZO]
+[ ] Statistiques post-combat étendues — dégâts, cellules, précision, sorts utilisés [LORENZO]
+
+
+==========================================================
+PHASE 5 — PROGRESSION JOUEUR & RÉTENTION
+Post-MVP
+==========================================================
+
+[ Profil Joueur ]
+--------------------------------
+[ ] Profils joueurs — compte, stats, historique [LORENZO]
+[ ] Titres & Profil Mastery [LORENZO]
+[ ] Système de compte (auth)
+[ ] Liste d'amis en jeu
+
+[ Cosmétiques ]
+--------------------------------
+[ ] Ranked rewards — cosmétiques de saison [LORENZO]
+[ ] Skins d'effets de sorts [LORENZO]
+[ ] Emotes pixel art [LORENZO]
+[ ] Skins personnages
+
+
+==========================================================
+PHASE 6 — POLISH MVP, TESTS & ÉQUILIBRAGE
+Durée estimée : 3–4 semaines
+==========================================================
+
+[ Checklist MVP Stricte ]
+--------------------------------
+[ ] Grille isométrique fonctionnelle [MVP]
+[x] Hub social + chat temps réel multijoueur [MVP] [LORENZO]
+[x] Déplacement Point & Click multijoueur [MVP] [LORENZO]
+[x] Deck Builder (1 passif + 5 sorts parmi 30) [MVP] [LORENZO]
+[ ] 8+ sorts implémentés en combat [MVP]
+[ ] 9+ passifs implémentés [MVP]
+[ ] Système PA/PM fonctionnel en combat [MVP]
+[ ] Timer de tour [MVP]
+[ ] 1v1 en réseau fonctionnel [MVP]
+[ ] Phase placement + sélection passifs [MVP]
+[ ] Conditions victoire/défaite [MVP]
+[ ] HUD de base (HP, PA, PM, sorts, timer) [MVP]
+[ ] Sons de base intégrés [MVP]
+[ ] Défis casual entre joueurs du hub [MVP] [LORENZO]
+[ ] Map combat — 4 obstacles fixes + 6 breakables aléatoires [MVP] [LORENZO]
+
+[ Tests & Qualité ]
+--------------------------------
+[ ] Test désync réseau — simuler latence élevée
+[ ] Test déconnexion mid-game
+[ ] Test overflow — sort hors limites grille
+[ ] Test interactions entre passifs
+[ ] Test timer — fin temps = fin tour correcte
+[ ] Test 1v1 complet de bout en bout
+
+[ Équilibrage Initial ]
+--------------------------------
+NOTE : Formule dégâts = (Valeur_sort * Mult_stat) - Résistance_cible
+       HP cible : 500-800 pour combats de 8-12 tours
+
+[ ] Équilibrage sorts Lorenzo — vérifier cohérence PA vs dégâts vs effets
+[ ] Équilibrage passifs Lorenzo — interactions, abus possibles
+[ ] Object pooling VFX + textes flottants — perf validée
+
+
+==========================================================
+ICEBOX — À NE PAS TOUCHER MAINTENANT
+==========================================================
+• 2v2 / 3v3
+• Guildes / Clans
+• E-sport / Tournois intégrés
+• Marketplace
+• Mobile
+• Saisons live service avancées
+
+
+==========================================================
+TIMELINE
+==========================================================
+M1–2  : Phase 0 — Prototype (GDD + Réseau) ← ON EST LÀ
+M3–4  : Phase 1 — Combat Engine
+M4–5  : Phase 2 — Networking
+Tout  : Phase 3 — DA & Audio (Maxon, en parallèle)
+M5–6  : Phase 6 — Polish + MVP
+M7–8  : Mode 2v2 + contenu (sorts, passifs)
+M9–10 : Système de ranking MMR + saisons
+M11-12: Beta publique + polish artistique complet
+
+MVP JOUABLE CIBLE : Fin du mois 6
+
+==========================================================
+PILLIERS DESIGN (boussole permanente)
+==========================================================
+1. Skill > RNG
+2. Matchs courts, décisions tendues
+3. Lecture claire du combat
+4. Profondeur tactique sans complexité inutile
+5. Easy to learn, brutal to master
+
+==========================================================

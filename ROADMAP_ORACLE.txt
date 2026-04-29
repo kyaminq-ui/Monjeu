@@ -11,22 +11,22 @@ Git + GitHub (versioning)
 Photon PUN 2 ou Mirror (networking)
 
 
-PHASE 0 — PRÉ-PRODUCTION (2-3 semaines)
-Étape 0.1 — Design Document (GDD)
-0.1.1 — Définir le Core Loop
+✅PHASE 0 — PRÉ-PRODUCTION (2-3 semaines)
+✅Étape 0.1 — Design Document (GDD)
+✅0.1.1 — Définir le Core Loop
 Lobby → Sélection des passifs → Placement des unités 
 → Combats au tour par tour → Fin de match → Résultats
 Questions à répondre dans le GDD :
 
-Taille des grilles de combat (ex: 15x17 cases comme Dofus ?)
-Durée max d'un tour (ex: 30 secondes)
-Nombre de sorts dans un deck (ex: 6 à 8 sorts)
-PA (Points d'Action) par tour
-PM (Points de Mouvement) par tour
-Nombre de passifs disponibles au choix (ex: choisir 3 parmi 9)
-Conditions de victoire (tous les ennemis morts, capture de zone...)
+Taille des grilles de combat : 13x11
+Durée max d'un tour : 15 secondes
+Nombre de sorts dans un deck : 6
+PA (Points d'Action) par tour : 8
+PM (Points de Mouvement) par tour : 3
+Nombre de passifs dans un deck : 1
+Conditions de victoire : tous les ennemis morts
 
-0.1.2 — Définir le système de sorts
+✅0.1.2 — Définir le système de sorts
 Structure d'un sort :
 ├── Nom + Icône
 ├── Coût en PA
@@ -37,13 +37,9 @@ Structure d'un sort :
 └── Description des synergies possibles
 Catégories de sorts pour le MVP :
 
-Sorts offensifs (dégâts directs)
-Sorts de contrôle (immobilisation, recul, attraction)
-Sorts de soin/soutien
-Sorts de positionnement (téléportation, dash)
-Sorts défensifs (bouclier, évasion)
+Attaques, Tactique, Survie
 
-0.1.3 — Définir les passifs
+✅0.1.3 — Définir les passifs
 Structure d'un passif :
 ├── Nom + Icône
 ├── Déclencheur (début de tour, quand blessé, sur kill...)
@@ -51,13 +47,7 @@ Structure d'un passif :
 └── Interactions avec les sorts
 Exemples de passifs pour le MVP :
 
-Sang Noir : Chaque attaque reçue te soigne de 5% des dégâts
-Fièvre du Combat : +1 PA si tu as tué une unité au tour précédent
-Ombre Persistante : Si tu n'attaques pas, tu deviens invisible
-Pacte de Fer : -20% dégâts reçus mais -1 PM permanent
-Écho Maudit : Le dernier sort lancé coûte 1 PA de moins
-
-0.1.4 — Moodboard DA
+✅0.1.4 — Moodboard DA
 Références visuelles à collecter :
 
 Darkest Dungeon (dark fantasy pixel art)

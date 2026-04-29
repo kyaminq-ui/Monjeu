@@ -27,6 +27,9 @@ public class Cell
     /// <summary>La cellule peut-elle être traversée ?</summary>
     public bool IsWalkable { get; set; } = true;
 
+    /// <summary>Type visuel et fonctionnel de cette cellule (sol, obstacle, spawn…)</summary>
+    public CellTileType TileType { get; set; } = CellTileType.Ground;
+
     /// <summary>La cellule est-elle occupée par quelque chose ?</summary>
     public bool IsOccupied => Occupant != null;
 

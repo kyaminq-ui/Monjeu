@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f2433c3bba3424ebb62f0873032a1a, type: 3}
+  m_Name: TileSpriteRegistry
+  m_EditorClassIdentifier: 
+  groundTiles:
+  - {fileID: 21300000, guid: 44e8fb39ae1695141a8cb5b7201c9fcc, type: 3}
+  - {fileID: 21300000, guid: 09dfecf21dff2e043815d9bf893011f3, type: 3}
+  - {fileID: 21300000, guid: c2aae6b834af50b418a8efb3ca5e58e5, type: 3}
+  - {fileID: 21300000, guid: 7e396c78fd3eb3547b7ad337705ae9d2, type: 3}
+  - {fileID: 21300000, guid: 425f672ce9fb54145858c31419e77150, type: 3}
+  - {fileID: 21300000, guid: 8b81fc38775e94a4fa875bd34c628183, type: 3}
+  - {fileID: 21300000, guid: f80b34aa757bb404eaf3002c0ae6982b, type: 3}
+  - {fileID: 21300000, guid: d5cafd6c1cf0c1a45b0924589370f695, type: 3}
+  - {fileID: 21300000, guid: aef9253840552a54b8b0c06a76b82a2a, type: 3}
+  - {fileID: 21300000, guid: 5c1c6d5fb0c9d2f469a6cbec067b7acd, type: 3}
+  - {fileID: 21300000, guid: dd693dafd0c7cf9448ec33a9cba48301, type: 3}
+  - {fileID: 21300000, guid: d167a562d21a0aa418dc7a06c64b980f, type: 3}
+  groundBloodTile: {fileID: 21300000, guid: d956f863eb30c124fbdddeb7ede5efc4, type: 3}
+  groundGrassTile: {fileID: 21300000, guid: c9e022f9a5c9c7e458d3ef8472c3c717, type: 3}
+  obstacleTiles:
+  - {fileID: 21300000, guid: 1c27882e48d9dcf428f4c5d502d68e86, type: 3}
+  - {fileID: 21300000, guid: 19e136c663856e04593736f15f8fb997, type: 3}
+  - {fileID: 21300000, guid: 7fad2b0e2e9ab934bb4929c0763b5c12, type: 3}
+  - {fileID: 21300000, guid: 7707df1ae9f3fc34bad1cc47c064a5c7, type: 3}
+  borderTopLeft: {fileID: 21300000, guid: 2740d47188664f4499af09f7690441a6, type: 3}
+  borderTopCenter: {fileID: 21300000, guid: 87186f2bd1fe21c4593dd7dfd7359837, type: 3}
+  borderTopRight: {fileID: 21300000, guid: 070fafe7cf895cf43b0353c64545f0b3, type: 3}
+  spawnTeam1Color: {r: 0.25, g: 0.45, b: 1, a: 0.4}
+  spawnTeam2Color: {r: 1, g: 0.3, b: 0.2, a: 0.4}

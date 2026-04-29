@@ -178,14 +178,14 @@ Priorité 2 (post-MVP) :
 Astuce PixelLab : Utiliser pour générer une base de personnage dark fantasy, puis retravailler dans Aseprite pour les animations.
 
 PHASE 2 — SYSTÈME DE COMBAT (5-7 semaines)
-Étape 2.1 — Tour par tour et initiative
+Étape 2.1 — Tour par tour et ordre de jeu
 2.1.1 — Game Manager et ordre des tours
 Prompt Cursor AI :
 "Crée un TurnManager Unity C# pour combat tactique :
-- Gestion de la liste de tous les combattants triée par initiative
+- Gestion de la liste de tous les combattants triée par ordre de jeu, l'ordre de jeu est aléatoire, aucun combattant n'a l'avantage, l'ordre est aléatoire
 - Events : OnTurnStart(character), OnTurnEnd(character), 
   OnRoundStart(roundNumber), OnCombatEnd(team victorieuse)
-- Timer par tour (30 secondes) avec callback OnTimeOut 
+- Timer par tour (15 secondes) avec callback OnTimeOut 
   qui force la fin du tour
 - Méthode EndTurn() appelable par le joueur
 - Reset PA/PM à chaque début de tour
@@ -259,9 +259,9 @@ Prompt Cursor AI :
 2.3.2 — Écran de sélection des passifs
 Flux UX :
 Début de game :
-1. Afficher 9 passifs (ou 6) tirés aléatoirement du pool
-2. Le joueur choisit 3 passifs (ou 2 selon balance)
-3. Timer de sélection (30-45 secondes)
+1. Afficher 5 passifs tirés aléatoirement du pool
+2. Le joueur choisit 1 passifs
+3. Timer de sélection (30 secondes)
 4. Si pas de choix → sélection aléatoire automatique
 5. Affichage récap des passifs choisis par toute l'équipe
 

@@ -146,13 +146,12 @@ Types de tiles à créer pour MVP :
 1.3.1 — Architecture des données
 Prompt Cursor AI :
 "Crée des ScriptableObjects Unity pour :
-1. CharacterStats : HP max, PA max, PM max, initiative, 
-   résistances (feu, eau, terre, air, neutre)
+1. CharacterStats : 50, 8 PA, 3PM,
 2. SpellData : nom, coût PA, portée min/max, type de zone, 
-   dégâts/effets, cooldown, sprite icône, description
+   dégâts/effets, cooldown, sprite icône, description, synergie
 3. PassiveData : nom, déclencheur (enum), effet, valeur, 
    sprite icône, description
-4. DeckData : List<SpellData> (6-8 sorts max)"
+4. DeckData : List<SpellData> (6 sorts max, 1 passif max)"
 1.3.2 — Contrôleur de personnage
 Prompt Cursor AI :
 "Crée un CharacterController Unity C# pour jeu tactique tour par tour :

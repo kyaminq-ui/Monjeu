@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Hotbar de sorts en bas d'écran.
-/// Raccourcis : Q W E R A S D F (indices 0-7).
+/// Raccourcis : Q W E R A S D F (indices 0-7, spec Phase 2).
 /// Réagit aux événements PA/PM du TacticalCharacter actif.
 /// </summary>
 public class DeckUI : MonoBehaviour
@@ -11,7 +11,7 @@ public class DeckUI : MonoBehaviour
     // =========================================================
     // CONFIGURATION
     // =========================================================
-    [Header("Slots (6 max, correspond aux touches 1 2 3 4 5 6)")]
+    [Header("Slots (jusqu'à 8 — Q W E R A S D F)")]
     public List<SpellSlotUI> slots = new List<SpellSlotUI>();
 
     [Header("Tooltip")]
@@ -24,11 +24,11 @@ public class DeckUI : MonoBehaviour
     private SpellCaster       activeCaster;
     private int               selectedSlotIndex = -1;
 
-    private static readonly string[] Hotkeys = { "1", "2", "3", "4", "5", "6" };
+    private static readonly string[] Hotkeys = { "Q", "W", "E", "R", "A", "S", "D", "F" };
     private static readonly KeyCode[] HotkeyCodes =
     {
-        KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3,
-        KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6
+        KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R,
+        KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F
     };
 
     // =========================================================
@@ -36,7 +36,6 @@ public class DeckUI : MonoBehaviour
     // =========================================================
     public void BindCharacter(TacticalCharacter character)
     {
-        // Désabonner l'ancien
         if (activeCharacter != null)
         {
             activeCharacter.OnPAChanged -= OnResourceChanged;
@@ -77,7 +76,7 @@ public class DeckUI : MonoBehaviour
                 spell = i < spells.Count ? spells[i] : null;
             }
 
-            string hotkey = i < Hotkeys.Length ? Hotkeys[i] : "";
+            string hotkey = i < Hotkeys.Length ? Hotkeys[i] : $"(Slot {i + 1})";
             slots[i].Setup(spell, activeCharacter, this, i, hotkey);
             slots[i].gameObject.SetActive(activeCharacter != null);
         }
@@ -107,7 +106,6 @@ public class DeckUI : MonoBehaviour
         SpellSlotUI slot = slots[index];
         if (slot == null || !slot.HasSpell) return;
 
-        // Désélectionner si on reclique sur le même
         if (selectedSlotIndex == index)
         {
             ClearSelection();
@@ -115,11 +113,9 @@ public class DeckUI : MonoBehaviour
             return;
         }
 
-        // Tenter de sélectionner le sort
         bool ok = activeCaster.SelectSpell(slot.Spell);
         if (!ok) return;
 
-        // Mettre à jour le visuel
         if (selectedSlotIndex >= 0 && selectedSlotIndex < slots.Count)
             slots[selectedSlotIndex].SetSelected(false);
 
@@ -141,7 +137,8 @@ public class DeckUI : MonoBehaviour
     {
         if (activeCharacter == null) return;
 
-        for (int i = 0; i < HotkeyCodes.Length; i++)
+        int keyCount = Mathf.Min(HotkeyCodes.Length, slots.Count);
+        for (int i = 0; i < keyCount; i++)
         {
             if (Input.GetKeyDown(HotkeyCodes[i]))
             {
@@ -150,7 +147,6 @@ public class DeckUI : MonoBehaviour
             }
         }
 
-        // Echap = annuler le sort sélectionné
         if (Input.GetKeyDown(KeyCode.Escape) && selectedSlotIndex >= 0)
         {
             ClearSelection();

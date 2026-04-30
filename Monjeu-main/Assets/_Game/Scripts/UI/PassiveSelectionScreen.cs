@@ -24,6 +24,10 @@ public class PassiveSelectionScreen : MonoBehaviour
     public TextMeshProUGUI timerText;
     public float selectionDuration = 30f;
 
+    [Tooltip("Nombre de passifs proposés (max = nombre de PassiveCardUI configurés). Spec : 9.")]
+    [Range(1, 18)]
+    public int offeredPassiveCount = 9;
+
     [Header("Bouton confirmer")]
     public Button confirmButton;
 
@@ -61,7 +65,8 @@ public class PassiveSelectionScreen : MonoBehaviour
             return;
         }
 
-        displayedPassives = passivePool.GetRandom(cards.Count);
+        int offer = Mathf.Min(cards.Count, Mathf.Max(1, offeredPassiveCount));
+        displayedPassives = passivePool.GetRandom(offer);
         if (displayedPassives.Count == 0)
         {
             Debug.LogError("[PassiveSelectionScreen] PassivePool vide — ajoute des PassiveData dans All Passives.");

@@ -173,10 +173,11 @@ public class ArenaGenerator : MonoBehaviour
         int h         = arenaConfig.arenaHeight;
         int depth     = arenaConfig.spawnZoneDepth;
         int clearance = arenaConfig.minClearanceFromSpawn;
+        int borderM   = Mathf.Clamp(arenaConfig.obstacleBorderMargin, 0, 4);
 
         // Zone de combat accessible aux obstacles
-        int combatXMin = depth + clearance;
-        int combatXMax = w - depth - clearance - 1;
+        int combatXMin = Mathf.Max(depth + clearance, borderM);
+        int combatXMax = Mathf.Min(w - depth - clearance - 1, w - 1 - borderM);
 
         if (combatXMin > combatXMax)
         {
@@ -189,14 +190,22 @@ public class ArenaGenerator : MonoBehaviour
         int halfXMax = (combatXMin + combatXMax) / 2;
 
         // Construire et mélanger la liste des candidats
+        int yMin = borderM;
+        int yMax = h - 1 - borderM;
+        if (yMin > yMax)
+        {
+            Debug.LogWarning("[ArenaGenerator] obstacleBorderMargin supprime toute place verticale pour les obstacles.");
+            return;
+        }
+
         List<Vector2Int> candidates = new List<Vector2Int>();
         for (int x = combatXMin; x <= halfXMax; x++)
-            for (int y = 0; y < h; y++)
+            for (int y = yMin; y <= yMax; y++)
                 candidates.Add(new Vector2Int(x, y));
 
         ShuffleList(candidates);
 
-        int totalCombatCells = (combatXMax - combatXMin + 1) * h;
+        int totalCombatCells = (combatXMax - combatXMin + 1) * (yMax - yMin + 1);
         int targetCount      = Mathf.RoundToInt(totalCombatCells * arenaConfig.obstacleDensity);
         // Moitié des obstacles, car chacun est mirrored (sauf la colonne centrale)
         int targetHalf = Mathf.CeilToInt(targetCount / 2f);
@@ -374,6 +383,38 @@ public class ArenaGenerator : MonoBehaviour
                 bool isObstacle = type == CellTileType.Obstacle;
                 int  baseOrder  = -(y * w + x);
                 sr.sortingOrder = isObstacle ? baseOrder + w * h : baseOrder - w * h;
+
+                if (!isObstacle)
+                {
+                    Sprite deco = registry.MaybeGetDecorationOverlay(renderRng);
+                    if (deco != null)
+                    {
+                        var decoGo = new GameObject("Decoration");
+                        decoGo.transform.SetParent(tileGO.transform, false);
+                        decoGo.transform.localPosition = Vector3.zero;
+                        var decoSr = decoGo.AddComponent<SpriteRenderer>();
+                        decoSr.sprite = deco;
+                        decoSr.sortingOrder = sr.sortingOrder + 1;
+                    }
+                }
+
+                if (arenaConfig.renderPerimeterEdges)
+                {
+                    int peri = TileSpriteRegistry.GetPerimeterStep(x, y, w, h);
+                    if (peri >= 0)
+                    {
+                        Sprite edge = registry.GetEdgeOverlaySprite(peri);
+                        if (edge != null)
+                        {
+                            var edgeGo = new GameObject("Edge");
+                            edgeGo.transform.SetParent(tileGO.transform, false);
+                            edgeGo.transform.localPosition = Vector3.zero;
+                            var edgeSr = edgeGo.AddComponent<SpriteRenderer>();
+                            edgeSr.sprite = edge;
+                            edgeSr.sortingOrder = sr.sortingOrder + registry.edgeSortingOrderBoost;
+                        }
+                    }
+                }
             }
         }
     }
@@ -386,18 +427,12 @@ public class ArenaGenerator : MonoBehaviour
                 return registry.GetRandomObstacleTile(renderRng);
 
             case CellTileType.GroundBlood:
-                return registry.groundBloodTile != null
-                    ? registry.groundBloodTile
-                    : registry.GetRandomGroundTile(renderRng);
-
             case CellTileType.GroundGrass:
-                return registry.groundGrassTile != null
-                    ? registry.groundGrassTile
-                    : registry.GetRandomGroundTile(renderRng);
+                return registry.GetGroundSpriteForType(type, renderRng);
 
             default:
-                // Ground, SpawnTeam1, SpawnTeam2 → sol aléatoire
-                return registry.GetRandomGroundTile(renderRng);
+                // Ground, SpawnTeam1, SpawnTeam2 → sol aléatoire (tableau GROUND*)
+                return registry.GetGroundSpriteForType(CellTileType.Ground, renderRng);
         }
     }
 

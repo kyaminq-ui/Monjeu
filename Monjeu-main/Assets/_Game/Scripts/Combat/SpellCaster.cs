@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +28,14 @@ public class SpellCaster : MonoBehaviour
         if (spell.zoneType == ZoneType.Self)
         {
             validTargetCells = new List<Cell> { character.CurrentCell };
+            GridManager.Instance.HighlightCells(validTargetCells, HighlightType.Attack);
+        }
+        else if (spell.zoneType == ZoneType.Boost)
+        {
+            validTargetCells = new List<Cell> { character.CurrentCell };
+            var zone = AoECalculator.GetAffectedCells(
+                ZoneType.Boost, character.CurrentCell, character.CurrentCell, spell.aoeRadius);
+            GridManager.Instance.HighlightCells(zone, HighlightType.AoE);
         }
         else
         {
@@ -51,9 +60,8 @@ public class SpellCaster : MonoBehaviour
     public void PreviewAoE(Cell hoveredCell)
     {
         if (selectedSpell == null || !validTargetCells.Contains(hoveredCell)) return;
-        if (previewCells.Count > 0 && previewCells[0] == hoveredCell) return; // déjà affiché
+        if (previewCells.Count > 0 && previewCells[0] == hoveredCell) return;
 
-        // Restaurer les highlights précédents
         GridManager.Instance.ClearAllHighlights();
         GridManager.Instance.HighlightCells(validTargetCells, HighlightType.Attack);
 
@@ -82,26 +90,36 @@ public class SpellCaster : MonoBehaviour
         if (selectedSpell == null) return false;
         if (!validTargetCells.Contains(targetCell)) return false;
 
+        StartCoroutine(CastRoutine(targetCell));
+        return true;
+    }
+
+    private IEnumerator CastRoutine(Cell targetCell)
+    {
+        SpellData spell = selectedSpell;
         List<Cell> affectedCells = AoECalculator.GetAffectedCells(
-            selectedSpell.zoneType,
+            spell.zoneType,
             character.CurrentCell,
             targetCell,
-            selectedSpell.aoeRadius
+            spell.aoeRadius
         );
 
-        character.SpendPA(selectedSpell.paCost);
-        character.StartCooldown(selectedSpell);
+        CancelSpell();
+
+        character.SpendPA(spell.paCost);
+        character.StartCooldown(spell);
         character.SetCastingState(true);
 
-        SpellResolver.Resolve(selectedSpell, character, affectedCells);
+        var animator = character.GetComponent<SpellAnimator>();
+        if (animator != null && animator.resolvedDelaySeconds > 0f)
+            yield return animator.PlayThenResolve(spell, () => SpellResolver.Resolve(spell, character, affectedCells));
+        else
+            SpellResolver.Resolve(spell, character, affectedCells);
+
+        CombatLog.AppendSpell(character, spell);
 
         character.SetCastingState(false);
-
-        // Briser l'invisibilité au cast
         character.RemoveStatusEffect(StatusEffectType.Invisible);
-
-        CancelSpell();
-        return true;
     }
 
     // =========================================================
@@ -128,6 +146,11 @@ public class SpellCaster : MonoBehaviour
                 if (cell == null) continue;
 
                 if (spell.zoneType == ZoneType.FreeCell && (cell.IsOccupied || !cell.IsWalkable)) continue;
+
+                if (spell.zoneType == ZoneType.Boost)
+                {
+                    if (cell != origin) continue;
+                }
 
                 if (spell.requiresLineOfSight && !spell.ignoresLineOfSight)
                     if (!AoECalculator.HasLineOfSight(origin, cell)) continue;

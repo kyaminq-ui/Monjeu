@@ -112,7 +112,7 @@ public class OracleSetupWizard : EditorWindow
     void DrawSectionUI()
     {
         DrawSectionTitle("🖥  UI DE COMBAT");
-        DrawHelpBox("Crée ou complète le Canvas avec DeckUI (6 slots)," +
+        DrawHelpBox("Crée ou complète le Canvas avec DeckUI (jusqu'à 8 slots, QWERASDF)," +
                     " SpellTooltip, TimerUI et PassiveSelectionScreen.");
 
         if (GoldButton("Setup UI Combat"))
@@ -230,6 +230,8 @@ public class OracleSetupWizard : EditorWindow
 
         // SpellCaster
         EnsureComponent<SpellCaster>(go, "SpellCaster");
+
+        EnsureComponent<SpellAnimator>(go, "SpellAnimator (optionnel VFX)");
 
         // PassiveManager
         EnsureComponent<PassiveManager>(go, "PassiveManager");

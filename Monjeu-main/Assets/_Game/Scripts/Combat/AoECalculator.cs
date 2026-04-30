@@ -3,6 +3,9 @@ using UnityEngine;
 
 public static class AoECalculator
 {
+    /// <summary>Demi-angle du cône en degrés (ouverture totale ≈ 2× cette valeur).</summary>
+    public const float DefaultConeHalfAngleDegrees = 52f;
+
     public static List<Cell> GetAffectedCells(ZoneType zone, Cell origin, Cell target, int radius)
     {
         switch (zone)
@@ -11,9 +14,11 @@ public static class AoECalculator
             case ZoneType.SingleTarget:  return new List<Cell> { target };
             case ZoneType.FreeCell:      return new List<Cell> { target };
             case ZoneType.Cross:         return GetCross(target);
-            case ZoneType.Circle:        return GetCircle(target, radius);
+            case ZoneType.Circle:        return GetCircleWithObstacles(target, radius);
             case ZoneType.Line:          return GetLine(origin, target);
             case ZoneType.Bounce:        return GetBounce(origin, target);
+            case ZoneType.Cone:          return GetCone(origin, target, radius, DefaultConeHalfAngleDegrees);
+            case ZoneType.Boost:         return GetCircleWithObstacles(origin, radius);
             default:                     return new List<Cell> { target };
         }
     }
@@ -37,20 +42,56 @@ public static class AoECalculator
     }
 
     // =========================================================
-    // CERCLE — toutes les cases à distance Manhattan <= radius
+    // CERCLE — distance Manhattan <= radius, LOS depuis le centre (obstacles)
     // =========================================================
-    private static List<Cell> GetCircle(Cell center, int radius)
+    private static List<Cell> GetCircleWithObstacles(Cell center, int radius)
     {
         var cells = new List<Cell>();
-        if (center == null) return cells;
+        if (center == null || GridManager.Instance == null) return cells;
         for (int x = center.GridX - radius; x <= center.GridX + radius; x++)
             for (int y = center.GridY - radius; y <= center.GridY + radius; y++)
             {
                 int dist = Mathf.Abs(x - center.GridX) + Mathf.Abs(y - center.GridY);
                 if (dist > radius) continue;
                 Cell c = GridManager.Instance.GetCell(x, y);
-                if (c != null) cells.Add(c);
+                if (c == null) continue;
+                if (!HasLineOfSight(center, c)) continue;
+                cells.Add(c);
             }
+        return cells;
+    }
+
+    // =========================================================
+    // CÔNE — ouverture angulaire depuis l'origine vers la cible, profondeur Chebyshev
+    // =========================================================
+    private static List<Cell> GetCone(Cell origin, Cell focal, int range, float halfAngleDeg)
+    {
+        var cells = new List<Cell>();
+        if (origin == null || focal == null || GridManager.Instance == null) return cells;
+        int ox = origin.GridX, oy = origin.GridY;
+        int fx = focal.GridX - ox, fy = focal.GridY - oy;
+        if (fx == 0 && fy == 0) return cells;
+
+        float bearing = Mathf.Atan2(fy, fx) * Mathf.Rad2Deg;
+        int gw = GridManager.Instance.GridWidth;
+        int gh = GridManager.Instance.GridHeight;
+
+        for (int x = 0; x < gw; x++)
+        {
+            for (int y = 0; y < gh; y++)
+            {
+                int dx = x - ox, dy = y - oy;
+                if (dx == 0 && dy == 0) continue;
+                int cheb = Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy));
+                if (cheb > range) continue;
+                float ang = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
+                if (Mathf.Abs(Mathf.DeltaAngle(bearing, ang)) > halfAngleDeg) continue;
+                Cell c = GridManager.Instance.GetCell(x, y);
+                if (c == null) continue;
+                if (!HasLineOfSight(origin, c)) continue;
+                cells.Add(c);
+            }
+        }
         return cells;
     }
 

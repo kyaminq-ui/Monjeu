@@ -41,6 +41,7 @@ public static class SpellResolver
                     }
 
                     target.TakeDamage(dmg, caster);
+                    CombatLog.Append($"{caster?.name ?? \"?\"} inflige <b>{dmg}</b> PV à {target.name} ({spell.spellName}).");
                     break;
 
                 case SpellEffectType.SelfDamage:
@@ -50,6 +51,7 @@ public static class SpellResolver
                 // ---- Soin ----
                 case SpellEffectType.Heal:
                     (target ?? caster).Heal(effect.value);
+                    CombatLog.Append($"{(target ?? caster).name} récupère <b>{effect.value}</b> PV.");
                     break;
 
                 // ---- Saignement ----

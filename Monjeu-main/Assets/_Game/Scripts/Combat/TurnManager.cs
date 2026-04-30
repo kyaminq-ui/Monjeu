@@ -20,14 +20,16 @@ public class TurnManager : MonoBehaviour
     public event System.Action<TacticalCharacter> OnTurnStart;
     public event System.Action<TacticalCharacter> OnTurnEnd;
     public event System.Action<int> OnRoundStart;       // numéro du round
-    public event System.Action<int> OnCombatEnd;        // teamId gagnante (-1 = égalité)
+    /// <summary>Équipe gagnante (teamId Photon / logique jeu) ; -1 si égalité / aucune.</summary>
+    public event System.Action<int> OnCombatEnd;
     public event System.Action OnTimeOut;
 
     // =========================================================
     // CONFIGURATION
     // =========================================================
     [Header("Configuration")]
-    public float turnDuration = 15f;
+    [Tooltip("Durée max du tour en secondes (spec Phase 2 : 30).")]
+    public float turnDuration = 30f;
 
     // =========================================================
     // ÉTAT
@@ -61,16 +63,32 @@ public class TurnManager : MonoBehaviour
     // =========================================================
     public void StartCombat()
     {
-        // Ordre tiré aléatoirement une seule fois, fixe pour tout le combat
         turnOrder.Clear();
         foreach (var kvp in characterTeams)
             turnOrder.Add(kvp.Key);
-        Shuffle(turnOrder);
+
+        // Initiative décroissante (spec 2.1.1). Égalités : ordre InstanceID stable.
+        turnOrder.Sort(CompareInitiativeThenStable);
 
         roundNumber = 0;
         currentIndex = 0;
         combatActive = true;
         StartNewRound();
+    }
+
+    private static int CompareInitiativeThenStable(TacticalCharacter a, TacticalCharacter b)
+    {
+        int ia = InitiativeOf(a);
+        int ib = InitiativeOf(b);
+        int cmp = ib.CompareTo(ia);
+        if (cmp != 0) return cmp;
+        return a.GetInstanceID().CompareTo(b.GetInstanceID());
+    }
+
+    private static int InitiativeOf(TacticalCharacter ch)
+    {
+        if (ch != null && ch.stats != null) return ch.stats.initiative;
+        return 0;
     }
 
     // =========================================================
@@ -86,11 +104,9 @@ public class TurnManager : MonoBehaviour
 
     private void AdvanceToNextTurn()
     {
-        // Passer les personnages morts
         while (currentIndex < turnOrder.Count && !turnOrder[currentIndex].IsAlive)
             currentIndex++;
 
-        // Tous ont joué ce round → nouveau round
         if (currentIndex >= turnOrder.Count)
         {
             StartNewRound();
@@ -168,18 +184,6 @@ public class TurnManager : MonoBehaviour
             combatActive = false;
             turnActive = false;
             OnCombatEnd?.Invoke(-1);
-        }
-    }
-
-    // =========================================================
-    // UTILITAIRES
-    // =========================================================
-    private void Shuffle(List<TacticalCharacter> list)
-    {
-        for (int i = list.Count - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1);
-            (list[i], list[j]) = (list[j], list[i]);
         }
     }
 }

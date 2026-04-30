@@ -10,6 +10,8 @@ public enum ZoneType
     Bounce,      // Rebond sur ennemis adjacents à la cible (Ricochet)
     Self,        // Soi-même uniquement
     FreeCell,    // Case libre dans la portée (Saut de l'Ange, Pilier de Pierre)
+    Cone,        // Cône devant le lanceur (axe vers la case visée)
+    Boost,       // Zone autour du lanceur (rayon = aoeRadius)
 }
 
 public enum SpellEffectType

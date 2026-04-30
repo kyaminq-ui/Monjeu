@@ -10,4 +10,8 @@ public class CharacterStats : ScriptableObject
     public int maxPA = 8;
     public int maxPM = 3;
 
+    [Header("Initiative combat (tactical)")]
+    [Tooltip("Plus la valeur est haute, plus le personnage agit tôt dans l'ordre des tours.")]
+    public int initiative = 10;
+
 }

@@ -56,6 +56,11 @@ public class ArenaConfig : ScriptableObject
              "Évite de bloquer l'accès à la zone de combat dès la sortie du spawn.")]
     public int minClearanceFromSpawn = 1;
 
+    [Range(1, 3)]
+    [Tooltip("Aucune case d'obstacle à moins de N cases du bord extérieur de l'arène complète " +
+             "(x=0, y=0, derniers X/Y). Valeur recommandée : 1 = pas d'obstacles au pourtour de la carte.")]
+    public int obstacleBorderMargin = 1;
+
     // =========================================================
     // VARIANTES DE TERRAIN
     // =========================================================
@@ -92,6 +97,10 @@ public class ArenaConfig : ScriptableObject
     [Tooltip("Registre des sprites de tiles (GROUND, OBSTACLE, etc.). " +
              "Créer un TileSpriteRegistry et l'assigner ici.")]
     public TileSpriteRegistry tileRegistry;
+
+    [Header("=== BORDURES PÉRIMÈTRIQUES ===")]
+    [Tooltip("Affiche les EDGE1–EDGE12 sur le contour de la grille.")]
+    public bool renderPerimeterEdges = true;
 
     // =========================================================
     // VALIDATION

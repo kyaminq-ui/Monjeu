@@ -18,8 +18,10 @@ MonoBehaviour:
   obstacleDensity: 0.15
   mirrorSymmetry: 1
   minClearanceFromSpawn: 1
+  obstacleBorderMargin: 1
   bloodTileChance: 0.06
   grassTileChance: 0.08
   seed: -1
   maxObstaclePlacementAttempts: 300
   tileRegistry: {fileID: 11400000, guid: 5e1c507451d9748499604aee80c1901d, type: 2}
+  renderPerimeterEdges: 1

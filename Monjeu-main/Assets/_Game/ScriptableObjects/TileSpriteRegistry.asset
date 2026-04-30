@@ -26,14 +26,29 @@ MonoBehaviour:
   - {fileID: 21300000, guid: dd693dafd0c7cf9448ec33a9cba48301, type: 3}
   - {fileID: 21300000, guid: d167a562d21a0aa418dc7a06c64b980f, type: 3}
   groundBloodTile: {fileID: 21300000, guid: d956f863eb30c124fbdddeb7ede5efc4, type: 3}
+  groundBloodVariants: []
   groundGrassTile: {fileID: 21300000, guid: c9e022f9a5c9c7e458d3ef8472c3c717, type: 3}
+  groundGrassOrCursedVariants: []
+  groundDecorationChance: 0
+  groundDecorationTiles: []
   obstacleTiles:
   - {fileID: 21300000, guid: 1c27882e48d9dcf428f4c5d502d68e86, type: 3}
   - {fileID: 21300000, guid: 19e136c663856e04593736f15f8fb997, type: 3}
   - {fileID: 21300000, guid: 7fad2b0e2e9ab934bb4929c0763b5c12, type: 3}
   - {fileID: 21300000, guid: 7707df1ae9f3fc34bad1cc47c064a5c7, type: 3}
-  borderTopLeft: {fileID: 21300000, guid: 2740d47188664f4499af09f7690441a6, type: 3}
-  borderTopCenter: {fileID: 21300000, guid: 87186f2bd1fe21c4593dd7dfd7359837, type: 3}
-  borderTopRight: {fileID: 21300000, guid: 070fafe7cf895cf43b0353c64545f0b3, type: 3}
+  edgeTiles:
+  - {fileID: 21300000, guid: 2740d47188664f4499af09f7690441a6, type: 3}
+  - {fileID: 21300000, guid: 87186f2bd1fe21c4593dd7dfd7359837, type: 3}
+  - {fileID: 21300000, guid: 070fafe7cf895cf43b0353c64545f0b3, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  edgeSortingOrderBoost: 2
   spawnTeam1Color: {r: 0.25, g: 0.45, b: 1, a: 0.4}
   spawnTeam2Color: {r: 1, g: 0.3, b: 0.2, a: 0.4}

@@ -21,6 +21,9 @@ public class GridManager : MonoBehaviour
     // =========================================================
     [Header("=== CONFIGURATION ===")]
     public GridConfig config;
+
+    public int GridWidth  => config != null ? config.width  : 0;
+    public int GridHeight => config != null ? config.height : 0;
     [Header("=== PREFABS ===")]
     public GameObject cellPrefab;
     // =========================================================

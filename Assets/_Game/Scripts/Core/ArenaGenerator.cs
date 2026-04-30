@@ -20,7 +20,8 @@ using UnityEngine;
 /// SETUP UNITY :
 ///   - Ce MonoBehaviour doit être dans la scène avec GridManager
 ///   - Assigner ArenaConfig et GridConfig dans l'Inspector
-///   - Créer les assets ScriptableObject : ArenaConfig + TileSpriteRegistry
+///   - TileSpriteRegistry : menu <c>Arena → Appliquer les tuiles NewTile au registre</c>
+///     (textures PNG dans Assets/_Game/Sprites/Tiles/NewTile)
 /// </summary>
 [DefaultExecutionOrder(-5)]  // S'exécute avant GridManager (order 0) pour ajuster les dimensions
 public class ArenaGenerator : MonoBehaviour
@@ -357,7 +358,7 @@ public class ArenaGenerator : MonoBehaviour
                 if (cell == null) continue;
 
                 CellTileType type   = arenaData[x, y];
-                Sprite       sprite = PickSprite(type, registry, renderRng);
+                Sprite       sprite = PickSprite(x, y, type, registry, renderRng);
                 if (sprite == null) continue;
 
                 GameObject tileGO  = new GameObject($"Tile_{x}_{y}");
@@ -370,33 +371,68 @@ public class ArenaGenerator : MonoBehaviour
                 // Tri isométrique :
                 //   - Les tiles de sol sont à la couche la plus basse (-1000 range)
                 //   - Les obstacles sont légèrement au-dessus pour dépasser visuellement
-                //   - Le CellHighlight (order 0 par défaut) reste toujours au-dessus des tiles
+                //   - CellHighlight règle un overlaySortingOrder (ex. +420) au-dessus des tiles de sol procéduraux
                 bool isObstacle = type == CellTileType.Obstacle;
                 int  baseOrder  = -(y * w + x);
-                sr.sortingOrder = isObstacle ? baseOrder + w * h : baseOrder - w * h;
+                int  sortOrder  = isObstacle ? baseOrder + w * h : baseOrder - w * h;
+                sr.sortingOrder = sortOrder;
+
+                if (!isObstacle &&
+                    arenaConfig.decorationTileChance > 0f &&
+                    registry.decorationTiles != null &&
+                    registry.decorationTiles.Length > 0 &&
+                    renderRng.NextDouble() < arenaConfig.decorationTileChance)
+                {
+                    Sprite decoSprite = registry.GetRandomDecorationTile(renderRng);
+                    if (decoSprite != null)
+                    {
+                        GameObject decoGO = new GameObject("Decoration");
+                        decoGO.transform.SetParent(tileGO.transform, false);
+                        decoGO.transform.localPosition = Vector3.zero;
+                        SpriteRenderer decoSr = decoGO.AddComponent<SpriteRenderer>();
+                        decoSr.sprite       = decoSprite;
+                        decoSr.sortingOrder = sortOrder + 1;
+                    }
+                }
             }
         }
     }
 
-    Sprite PickSprite(CellTileType type, TileSpriteRegistry registry, System.Random renderRng)
+    Sprite PickSprite(int x, int y, CellTileType type, TileSpriteRegistry registry, System.Random renderRng)
     {
+        int w = arenaConfig.arenaWidth;
+        int h = arenaConfig.arenaHeight;
+
         switch (type)
         {
             case CellTileType.Obstacle:
                 return registry.GetRandomObstacleTile(renderRng);
 
             case CellTileType.GroundBlood:
-                return registry.groundBloodTile != null
-                    ? registry.groundBloodTile
-                    : registry.GetRandomGroundTile(renderRng);
+                {
+                    Sprite s = registry.GetRandomBloodRustTile(renderRng);
+                    return s != null ? s : registry.GetRandomGroundTile(renderRng);
+                }
 
             case CellTileType.GroundGrass:
-                return registry.groundGrassTile != null
-                    ? registry.groundGrassTile
-                    : registry.GetRandomGroundTile(renderRng);
+                {
+                    Sprite s = registry.GetRandomCursedGlowTile(renderRng);
+                    return s != null ? s : registry.GetRandomGroundTile(renderRng);
+                }
 
             default:
-                // Ground, SpawnTeam1, SpawnTeam2 → sol aléatoire
+                // Ground / spawns → bords optionnels puis sol aléatoire
+                bool onBorder =
+                    x <= 0 || x >= w - 1 ||
+                    y <= 0 || y >= h - 1;
+
+                if (arenaConfig.useEdgeTilesOnBorder && onBorder)
+                {
+                    Sprite edge = registry.GetRandomEdgeTile(renderRng);
+                    if (edge != null)
+                        return edge;
+                }
+
                 return registry.GetRandomGroundTile(renderRng);
         }
     }

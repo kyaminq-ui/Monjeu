@@ -20,6 +20,8 @@ MonoBehaviour:
   minClearanceFromSpawn: 1
   bloodTileChance: 0.06
   grassTileChance: 0.08
+  useEdgeTilesOnBorder: 1
+  decorationTileChance: 0.1
   seed: -1
   maxObstaclePlacementAttempts: 300
   tileRegistry: {fileID: 11400000, guid: 5e1c507451d9748499604aee80c1901d, type: 2}

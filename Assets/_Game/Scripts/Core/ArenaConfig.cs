@@ -62,12 +62,21 @@ public class ArenaConfig : ScriptableObject
 
     [Header("=== VARIANTES DE TERRAIN ===")]
     [Range(0f, 0.20f)]
-    [Tooltip("Probabilité qu'une case de sol devienne une variante sang (GROUNDBLOOD).")]
+    [Tooltip("Probabilité sol → variante sang/rouille (sprites bloodRust du TileSpriteRegistry).")]
     public float bloodTileChance = 0.06f;
 
     [Range(0f, 0.20f)]
-    [Tooltip("Probabilité qu'une case de sol devienne une variante herbe (GROUNDGRASS).")]
+    [Tooltip("Probabilité sol → variante lueur maudite (GROUNDGRASS / cursedGlow).")]
     public float grassTileChance = 0.08f;
+
+    [Tooltip("Cases sur les bords de la carte (x/y min/max) utilisent les sprites edge du registre, " +
+             "pour les tiles de sol type Ground / Spawn (pas les obstacles ni sang/curse).")]
+    public bool useEdgeTilesOnBorder = true;
+
+    [Range(0f, 0.25f)]
+    [Tooltip("Probabilité d'une couche décorative au-dessus du sol marchable " +
+             "(GROUND_DECORATION* du registre, jamais sur les obstacles).")]
+    public float decorationTileChance = 0.10f;
 
     // =========================================================
     // GÉNÉRATION PROCÉDURALE

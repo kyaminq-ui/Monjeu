@@ -66,6 +66,9 @@ crashlytics-build.properties
 *.rar
 *.gz
 
+# Doublon local (source canonique : Assets/_Game/Sprites/Tiles/NewTile)
+/NewTile/
+
 # OS generated
 .DS_Store
 .DS_Store?

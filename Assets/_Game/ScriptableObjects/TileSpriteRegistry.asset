@@ -13,27 +13,87 @@ MonoBehaviour:
   m_Name: TileSpriteRegistry
   m_EditorClassIdentifier: 
   groundTiles:
-  - {fileID: 21300000, guid: 44e8fb39ae1695141a8cb5b7201c9fcc, type: 3}
-  - {fileID: 21300000, guid: 09dfecf21dff2e043815d9bf893011f3, type: 3}
-  - {fileID: 21300000, guid: c2aae6b834af50b418a8efb3ca5e58e5, type: 3}
-  - {fileID: 21300000, guid: 7e396c78fd3eb3547b7ad337705ae9d2, type: 3}
-  - {fileID: 21300000, guid: 425f672ce9fb54145858c31419e77150, type: 3}
-  - {fileID: 21300000, guid: 8b81fc38775e94a4fa875bd34c628183, type: 3}
-  - {fileID: 21300000, guid: f80b34aa757bb404eaf3002c0ae6982b, type: 3}
-  - {fileID: 21300000, guid: d5cafd6c1cf0c1a45b0924589370f695, type: 3}
-  - {fileID: 21300000, guid: aef9253840552a54b8b0c06a76b82a2a, type: 3}
-  - {fileID: 21300000, guid: 5c1c6d5fb0c9d2f469a6cbec067b7acd, type: 3}
-  - {fileID: 21300000, guid: dd693dafd0c7cf9448ec33a9cba48301, type: 3}
-  - {fileID: 21300000, guid: d167a562d21a0aa418dc7a06c64b980f, type: 3}
-  groundBloodTile: {fileID: 21300000, guid: d956f863eb30c124fbdddeb7ede5efc4, type: 3}
-  groundGrassTile: {fileID: 21300000, guid: c9e022f9a5c9c7e458d3ef8472c3c717, type: 3}
+  - {fileID: 21300000, guid: cd99a2751807a444b9ce21e63878651c, type: 3}
+  - {fileID: 21300000, guid: 34607fec03f72d44b9651c3d39556cee, type: 3}
+  - {fileID: 21300000, guid: a7925aa10b48d444a8c94cd640d3a69c, type: 3}
+  - {fileID: 21300000, guid: d07f9ea9603d6214581171467b1ce7b4, type: 3}
+  - {fileID: 21300000, guid: b01379517da7ce6439834bc900bda3cc, type: 3}
+  - {fileID: 21300000, guid: 7fb7321e724c3b84488026f404c544a3, type: 3}
+  - {fileID: 21300000, guid: 631d119c95b5a5f44a6cfc0df3e9a89f, type: 3}
+  - {fileID: 21300000, guid: 4bbbc5351968e934eb90e41d4224f689, type: 3}
+  - {fileID: 21300000, guid: b3bbd2ab8a15ff14abbc8ac1603be0c2, type: 3}
+  - {fileID: 21300000, guid: 429bd5797b758b943bfe80b41203bb6e, type: 3}
+  - {fileID: 21300000, guid: ca5deaed8814b894eb2fd0e0371e1507, type: 3}
+  - {fileID: 21300000, guid: c773ceba88a9c074bb6098435e79bb14, type: 3}
+  groundBloodTile: {fileID: 21300000, guid: 39257612e5184da4887684ed12997f31, type: 3}
+  groundGrassTile: {fileID: 21300000, guid: 99cecac84932d504dbfba22ea27e70c5, type: 3}
+  bloodRustTiles:
+  - {fileID: 21300000, guid: 39257612e5184da4887684ed12997f31, type: 3}
+  - {fileID: 21300000, guid: a01e3fa49e4c95044b2d38fb6df3b32d, type: 3}
+  - {fileID: 21300000, guid: 6b7c5a4034be3104083c9a284fddd7cb, type: 3}
+  - {fileID: 21300000, guid: 09997df2b381688449a6150a64daaf31, type: 3}
+  - {fileID: 21300000, guid: e9acfe61289b06c45beb060f864ee04e, type: 3}
+  - {fileID: 21300000, guid: 2af6cbc11f073f44681dfcc897b686c7, type: 3}
+  - {fileID: 21300000, guid: 18d961c443e02974ea2756656b3995b1, type: 3}
+  - {fileID: 21300000, guid: 9ef610c7d1d992a40bc53e18cc03da1a, type: 3}
+  - {fileID: 21300000, guid: ba0c83c3fe7ce8d4f964cb75ef368fa7, type: 3}
+  - {fileID: 21300000, guid: b83b3cf173f463149a9c7e864a8c38d1, type: 3}
+  - {fileID: 21300000, guid: b1ef43358f386e44e87fb3112388635a, type: 3}
+  - {fileID: 21300000, guid: 1a284247c1537d8408511000bf45333d, type: 3}
+  cursedGlowTiles:
+  - {fileID: 21300000, guid: 99cecac84932d504dbfba22ea27e70c5, type: 3}
+  - {fileID: 21300000, guid: 36ab8561e0bccd54ea3a36e639ef8552, type: 3}
+  - {fileID: 21300000, guid: 30ea9d03bdde8424eb2691883a44d700, type: 3}
+  - {fileID: 21300000, guid: ff13f1af1e51b5b49b6e967be17a5b83, type: 3}
+  - {fileID: 21300000, guid: bc303cbc98f48464d90e3e4f49650055, type: 3}
+  - {fileID: 21300000, guid: 39df011cc479c8147ab840259d997ef5, type: 3}
+  - {fileID: 21300000, guid: 04078f0b438471940a7b06276605d177, type: 3}
+  - {fileID: 21300000, guid: 0915683f913f81c4fbd8bc78b62fb029, type: 3}
+  - {fileID: 21300000, guid: cf9ae1734cd00654ab946b81f2a1288d, type: 3}
+  - {fileID: 21300000, guid: 2f99110fe249c3a44bc6b9d263926195, type: 3}
+  - {fileID: 21300000, guid: b5c8ab70717d7cb458c658d5112921e6, type: 3}
+  - {fileID: 21300000, guid: 4faed573e240b11428b5e7f52790409f, type: 3}
+  decorationTiles:
+  - {fileID: 21300000, guid: bd18c997496587f44835c8e9be0ac234, type: 3}
+  - {fileID: 21300000, guid: d2e083870a948d543bca466c0e15d713, type: 3}
+  - {fileID: 21300000, guid: f923d945a3ca9134c8071282758984ec, type: 3}
+  - {fileID: 21300000, guid: 40761a21fd76b174b812f4c0c0f4a0c8, type: 3}
+  - {fileID: 21300000, guid: bc2aa84a1706c8045974e86d34cff87b, type: 3}
+  - {fileID: 21300000, guid: 56b293f020d92164e834f484db48e3b0, type: 3}
+  - {fileID: 21300000, guid: a09c89589c2e5644f9a0745188a9a07a, type: 3}
+  - {fileID: 21300000, guid: 68c1d7135cb2b2341960b80ac8ada495, type: 3}
+  - {fileID: 21300000, guid: 847c0dcfd7007c44483d38a743e292d2, type: 3}
+  - {fileID: 21300000, guid: a7c045309d5555a429ecded199305e66, type: 3}
+  - {fileID: 21300000, guid: 39f03c61aa7f16c4daa4c0b226087528, type: 3}
+  - {fileID: 21300000, guid: 3caa2f46928693b488bfa987fc297f91, type: 3}
+  edgeTiles:
+  - {fileID: 21300000, guid: 3ae788e8bc2c41441b97623b226dac38, type: 3}
+  - {fileID: 21300000, guid: 936925bd9bcd442499681084500d4355, type: 3}
+  - {fileID: 21300000, guid: a5b65db000bc53a46a6442fb053b8989, type: 3}
+  - {fileID: 21300000, guid: 49bc2f335468aea41808f463f0046413, type: 3}
+  - {fileID: 21300000, guid: 3e423d2efba0f3c40a8cea712a5dc408, type: 3}
+  - {fileID: 21300000, guid: 5451fcc6505f52e4c824c2f1b92682d6, type: 3}
+  - {fileID: 21300000, guid: 0977e3b0455e17249bee30ff452d7a4f, type: 3}
+  - {fileID: 21300000, guid: fd5a54b5a4a6ff24e87b893593e62634, type: 3}
+  - {fileID: 21300000, guid: 95eeddd918ba6bf48a1b44fe2e9d9c40, type: 3}
+  - {fileID: 21300000, guid: 166e3295d40f1f34595762f97f6e0a4c, type: 3}
+  - {fileID: 21300000, guid: 827c5b8427833ea469d4612aaa615f73, type: 3}
+  - {fileID: 21300000, guid: 20927bc803ef09b42adad24a900d616c, type: 3}
   obstacleTiles:
-  - {fileID: 21300000, guid: 1c27882e48d9dcf428f4c5d502d68e86, type: 3}
-  - {fileID: 21300000, guid: 19e136c663856e04593736f15f8fb997, type: 3}
-  - {fileID: 21300000, guid: 7fad2b0e2e9ab934bb4929c0763b5c12, type: 3}
-  - {fileID: 21300000, guid: 7707df1ae9f3fc34bad1cc47c064a5c7, type: 3}
-  borderTopLeft: {fileID: 21300000, guid: 2740d47188664f4499af09f7690441a6, type: 3}
-  borderTopCenter: {fileID: 21300000, guid: 87186f2bd1fe21c4593dd7dfd7359837, type: 3}
-  borderTopRight: {fileID: 21300000, guid: 070fafe7cf895cf43b0353c64545f0b3, type: 3}
+  - {fileID: 21300000, guid: 2705d680b275b4e40925f89617f26554, type: 3}
+  - {fileID: 21300000, guid: 6363bb0f053e3824bb468c47ea51def1, type: 3}
+  - {fileID: 21300000, guid: 2278f68d0b1d6cb479282c7d3139378c, type: 3}
+  - {fileID: 21300000, guid: ea6345b0b427e3b44a1a7e27210b6037, type: 3}
+  - {fileID: 21300000, guid: 18c19510a655b4a48af3d31a6fa47706, type: 3}
+  - {fileID: 21300000, guid: 42b051e288c243540a978436677ef349, type: 3}
+  - {fileID: 21300000, guid: 17bc9a2a371e2b141a76c383e5399d5d, type: 3}
+  - {fileID: 21300000, guid: 7029c3d969bbb9c40b4e5aebddb04bb1, type: 3}
+  - {fileID: 21300000, guid: de778ad3c1e21b444aa9dcfad2d7f84b, type: 3}
+  - {fileID: 21300000, guid: 741efb6704abedc44878b7bd049d88c1, type: 3}
+  - {fileID: 21300000, guid: baca4b157993e9c44a757a97409a19d6, type: 3}
+  - {fileID: 21300000, guid: a7b40a6e279e381419ae1d136aca2c03, type: 3}
+  borderTopLeft: {fileID: 21300000, guid: 3ae788e8bc2c41441b97623b226dac38, type: 3}
+  borderTopCenter: {fileID: 21300000, guid: 936925bd9bcd442499681084500d4355, type: 3}
+  borderTopRight: {fileID: 21300000, guid: a5b65db000bc53a46a6442fb053b8989, type: 3}
   spawnTeam1Color: {r: 0.25, g: 0.45, b: 1, a: 0.4}
   spawnTeam2Color: {r: 1, g: 0.3, b: 0.2, a: 0.4}
